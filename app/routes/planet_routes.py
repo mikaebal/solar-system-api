@@ -26,8 +26,8 @@ def create_planet():
     return planets_response, 201
 
 @planets_bp.get("")
-def get_all_planets(id):
-    query = db.seletc(Planet).order_by(Planet.id)
+def get_all_planets():
+    query = db.select(Planet).order_by(Planet.id)
     planets = db.session.scalars(query)
 
     # planet = validate_planet(id)
