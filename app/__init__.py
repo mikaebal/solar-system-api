@@ -1,7 +1,7 @@
 from flask import Flask
 from .db import db, migrate
-# from .models import planet
 from .routes.planet_routes import planets_bp
+from .models import planets
 
 
 # def create_app(test_config=None):
@@ -11,13 +11,14 @@ from .routes.planet_routes import planets_bp
 
 #     return app
 
-# SQLALCHEMY SETUP
+# ---------------------------------------------------------------
+# SQLALCHEMY CONNECTION SETUP
 
 def create_app():
     app = Flask(__name__)
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:postgres@localhost:5432/hello_books_development'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:postgres@localhost:5432/solar_system_developement'
 
     db.init_app(app)
     migrate.init_app(app, db)

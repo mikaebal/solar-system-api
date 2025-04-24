@@ -1,22 +1,24 @@
 from flask import abort, Blueprint, make_response
 from ..db import db 
-# from ..models.planets import planets
+from app.models.planets import Planet 
 
 planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
 @planets_bp.get("")
 def get_all_planets():
-    planets_response = []
-    for planet in planets:
-        planets_response.append(
-            {
-                "id": planet.id,
-                "title": planet.name,
-                "description": planet.description,
-                "atmosphere": planet.atmosphere
-            }
-        )
-    return planets_response
+
+# def get_all_planets():
+#     planets_response = []
+#     for planet in planets:
+#         planets_response.append(
+#             {
+#                 "id": planet.id,
+#                 "title": planet.name,
+#                 "description": planet.description,
+#                 "atmosphere": planet.atmosphere
+#             }
+#         )
+#     return planets_response
 
 @planets_bp.get("/<id>")
 def get_one_planet(id):
