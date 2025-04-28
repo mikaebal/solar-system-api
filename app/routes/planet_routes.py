@@ -1,4 +1,4 @@
-from flask import abort, Blueprint, make_response, request
+from flask import abort, Blueprint, make_response, request, Response
 from ..db import db 
 from app.models.planets import Planet 
 
@@ -45,27 +45,6 @@ def get_all_planets():
     return planets_response
 
 
-# def get_all_planets():
-#     planets_response = []
-#     for planet in planets:
-#         planets_response.append(
-#             {
-#                 "id": planet.id,
-#                 "title": planet.name,
-#                 "description": planet.description,
-#                 "atmosphere": planet.atmosphere
-#             }
-#         )
-#     return planets_response
-
-
-
-
-# --- WAVE 4 -------
-# https://github.com/AdaGold/solar-system-api/blob/main/project-directions/wave_04.md
-
-
-
 @planets_bp.get("/<id>")
 def get_one_planet(id):
     planet = validate_planet(id)
@@ -79,54 +58,40 @@ def get_one_planet(id):
 
     return planet_dict
 
+@planets_bp.put("/<id>")
+def update_planet(id):
+    planet = validate_planet(id)
+    request_body = request.get_json()
+
+    planet.name = request_body["name"]
+    planet.description = request_body["description"]
+    planet.atmosphere = request_body["atmosphere"]
+
+    db.session.commit()
+    return Response(status=204, mimetype="application/json")
+
+
+@planets_bp.delete("/<id>")
+def delete_planet(id):
+    planet = validate_planet(id)
+    db.session.delete(planet)
+    db.session.commit()
+
+    return Response(status=204, mimetype="application/json")
+
 
 def validate_planet(id):
     try:
         id = int(id)
-    except:
+    except ValueError:
         invalid = {"message": f"Planet id ({id}) is invalid."}
         abort(make_response(invalid,400))
 
-    #Write SQL to SELECT * FROM planets; --> in SQLAlchemy syntax
-    query = db.select(Planet).order_by(Planet.id)
-    planets = db.session.scalars(query) # planets is a list
+    query = db.select(Planet).where(Planet.id == id)
+    planet = db.session.scalar(query)
 
-    for planet in planets:
-        if planet.id == id:
-            return planet
+    if not planet:
+        not_found = {"message": f"Planet with id ({id}) was not not found."}
+        abort(make_response(not_found, 404))
 
-    not_found = {"message": f"Planet with id ({id}) was not not found."}
-    abort(make_response(not_found, 404))
-
-
-# PATCH(partial) request with valid planet data to update one existing planet and get a 201 response
-@planets_bp.route('/<int:item_id>', methods=['PATCH'])
-def update_one_planet(id):
-    planet = validate_planet(id)
-
-    data = get_all_planets()
-
-    updated_data = request.get_json() #parses incoming request data that is in JSON format and converts to a Python dictionary
-    
-    # How do we access our Planets dictionary (SQL table) 
-    
-    # How do we update the description key to a new value
-
-
-
-
-# 404 for non existing planet and 400 for invalid planet_id
-
-# DELETE request for an existing planet and get a 200 ok response
-# 404 for non existing planet and 400 for invalid planet_id
-
-
-
-@app.route('/data', methods=['GET', 'PATCH'])
-
-def handle_data():
-    if request.method == 'GET':
-        return jsonify(data)
-    elif request.method == 'PATCH':
-        data.update(request.get_json())
-        return jsonify(data)
+    return planet
