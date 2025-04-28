@@ -36,7 +36,7 @@ def get_all_planets():
         planets_response.append(
             {
                 "id": planet.id,
-                "title": planet.name,
+                "name": planet.name,
                 "description": planet.description,
                 "atmosphere": planet.atmosphere
             }
