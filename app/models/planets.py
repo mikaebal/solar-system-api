@@ -1,18 +1,23 @@
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..db import db
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .moon import Moon
 
 class Planet(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
     description: Mapped[str]
     atmosphere: Mapped[str]
+    moons: Mapped[list["Moon"]] = relationship(back_populates="planet")
 
     def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,
             "description": self.description,
-            "atmosphere": self.atmosphere
+            "atmosphere": self.atmosphere,
+            "moons": self.moons
         }
 
     @classmethod
@@ -20,7 +25,8 @@ class Planet(db.Model):
         return cls(
             name=planet_data["name"],
             description=planet_data["description"],
-            atmosphere=planet_data["atmosphere"]
+            atmosphere=planet_data["atmosphere"],
+            moons=planet_data["moons"]
         )
     
 # class Planet: 
