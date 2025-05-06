@@ -1,5 +1,6 @@
 from app.db import db
 from app.models.planets import Planet
+import pytest
 
 def test_get_all_planets_returns_empty_list_when_db_is_empty(client):
     # act

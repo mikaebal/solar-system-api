@@ -3,9 +3,9 @@ from .route_utilities import validate_model
 from ..db import db 
 from app.models.planets import Planet 
 
-planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
+bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
-@planets_bp.post("")
+@bp.post("")
 def create_planet():
     request_body = request.get_json()
     new_planet = Planet.from_dict(request_body) #make instance of planet class
@@ -15,7 +15,7 @@ def create_planet():
 
     return new_planet.to_dict(), 201
 
-@planets_bp.get("")
+@bp.get("")
 def get_all_planets():
     query = db.select(Planet)
 
@@ -44,13 +44,13 @@ def get_all_planets():
     return planets_response
 
 
-@planets_bp.get("/<id>")
+@bp.get("/<id>")
 def get_one_planet(id):
     planet = validate_model(Planet, id)
 
     return planet.to_dict()
 
-@planets_bp.put("/<id>")
+@bp.put("/<id>")
 def update_planet(id):
     planet = validate_model(Planet, id)
     request_body = request.get_json()
@@ -63,7 +63,7 @@ def update_planet(id):
     return Response(status=204, mimetype="application/json")
 
 
-@planets_bp.delete("/<id>")
+@bp.delete("/<id>")
 def delete_planet(id):
     planet = validate_model(Planet, id)
     db.session.delete(planet)

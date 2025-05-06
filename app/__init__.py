@@ -1,9 +1,11 @@
 from flask import Flask
 from .db import db, migrate
-from .routes.planet_routes import planets_bp
-from .models import planets
+from .routes.planet_routes import bp as planets_bp
+from .models import planets, moon
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # def create_app(test_config=None):
 #     app = Flask(__name__)
@@ -20,7 +22,7 @@ def create_app(config=None):
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # hardcoded
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:postgres@localhost:5432/solar_system_developement'
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+st:5432/solar_system_developement'
 
     # sets value from development database in .env
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("SQLALCHEMY_DATABASE_URI")
