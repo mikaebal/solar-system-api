@@ -17,7 +17,7 @@ class Planet(db.Model):
             "name": self.name,
             "description": self.description,
             "atmosphere": self.atmosphere,
-            "moons": self.moons
+            "moons": [moon.to_dict() for moon in self.moons]
         }
 
     @classmethod
@@ -26,7 +26,7 @@ class Planet(db.Model):
             name=planet_data["name"],
             description=planet_data["description"],
             atmosphere=planet_data["atmosphere"],
-            moons=planet_data["moons"]
+            moons=planet_data.get("moons", [])
         )
     
 # class Planet: 

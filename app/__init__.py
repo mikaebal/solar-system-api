@@ -4,6 +4,7 @@ from .routes.planet_routes import bp as planets_bp
 from .models import planets, moon
 import os
 from dotenv import load_dotenv
+from .routes.moon_routes import bp as moon_bp
 
 load_dotenv()
 
@@ -35,5 +36,6 @@ def create_app(config=None):
 
     # Register Blueprints here
     app.register_blueprint(planets_bp)
+    app.register_blueprint(moon_bp)
 
     return app
