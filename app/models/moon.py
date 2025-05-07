@@ -27,5 +27,6 @@ class Moon(db.Model):
         return cls(
             size=moon_data["size"],
             description=moon_data["description"],
-            orbital_period=moon_data["orbital_period"]
+            orbital_period=moon_data["orbital_period"],
+            planet_id=moon_data.get("planet_id")
         )

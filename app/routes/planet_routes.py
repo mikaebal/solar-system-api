@@ -81,7 +81,7 @@ def delete_planet(id):
 
 # nested route
 # adds a new moon to a specific planet
-@bp.post("/planets/<planet_id>/moons")
+@bp.post("/<id>/moons")
 def create_moon_for_planet(id):
     planet = validate_model(Planet, id)
     request_body = request.get_json()
@@ -90,14 +90,14 @@ def create_moon_for_planet(id):
         "size": request_body["size"],
         "description": request_body["description"],
         "orbital_period": request_body["orbital_period"],
-        "planet": planet
+        "planet_id": planet.id 
     }
 
     return create_model(Moon, moon_data)
 
 # nested route
 # gets all moons associated with a specific planet
-@bp.get("/planets/<planet_id>/moons")
+@bp.get("/<id>/moons")
 def get_moons_for_planet(id):
     planet = validate_model(Planet, id)
     moons = [moon.to_dict() for moon in planet.moons]
